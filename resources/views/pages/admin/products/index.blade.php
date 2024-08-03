@@ -56,21 +56,6 @@
             </div>
         </div>
 
-{{--        <!-- Bulk Delete Form -->--}}
-{{--        <form id="bulkDeleteForm" method="POST" action="{{ route('products.bulk-delete') }}">--}}
-{{--            @csrf--}}
-{{--            @method('DELETE')--}}
-{{--            <input type="hidden" name="product_ids" id="product_ids" value="">--}}
-{{--            <button type="submit" class="btn btn-danger">Bulk Delete</button>--}}
-{{--        </form>--}}
-
-
-{{--        <form id="bulk-delete-form" method="POST" action="{{ route('products.bulkDelete') }}" method="POST">--}}
-{{--            @csrf--}}
-{{--            <input type="hidden" name="product_ids" id="product_ids" value="">--}}
-{{--            <button type="submit" class="btn btn-danger" id="bulk-delete-button">Delete Selected</button>--}}
-{{--        </form>--}}
-
         <form method="POST" action="{{ route('products.import') }}" enctype="multipart/form-data" id="importForm">
             @csrf
             <div class="form-group">
@@ -106,7 +91,6 @@
                     <td>{{ \Carbon\Carbon::parse($product->created_at)->format('Y-m-d') }}</td>
                     <td>
                         <a href="{{ route('products.show', ['encryptedId' => $product->encrypted_id]) }}" class="btn btn-info btn-sm">View</a>
-{{--                        @if(Auth::user()->hasRole('admin') || (Auth::user()->hasRole('sub-admin') && $product->user_id == Auth::id()))--}}
 
                         <a href="{{ route('products.edit', ['encryptedId' => $product->encrypted_id]) }}" class="btn btn-warning btn-sm">Edit</a>
                         <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
@@ -114,7 +98,6 @@
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                         </form>
-{{--                        @endif--}}
                     </td>
                 </tr>
                 @endforeach
@@ -167,91 +150,7 @@
         }
     });
 </script>
-{{--    <script>--}}
-{{--        // $(document).ready(function() {--}}
-            {{--$('#selectAll').click(function() {--}}
-            {{--    $('.productCheckbox').prop('checked', $(this).prop('checked'));--}}
-            {{--});--}}
 
-            {{--$('#deleteAllSelectedRecord').click(function(e) {--}}
-            {{--    e.preventDefault();--}}
-            {{--    var product_ids =[];--}}
-            {{--    $('input:checkbox[name=ids]:checked').each(function () {--}}
-            {{--        product_ids.push($(this).val());--}}
-            {{--    });--}}
-
-            {{--    $.ajax({--}}
-            {{--        url: '{{ route('products.bulk-delete') }}',--}}
-            {{--        type: 'DELETE',--}}
-            {{--        data: {--}}
-            {{--            ids: product_ids,--}}
-            {{--            _token: '{{ csrf_token() }}',--}}
-            {{--        },--}}
-            {{--        success: function(response) {--}}
-            {{--            $.each(product_ids,function(key,val){--}}
-            {{--                $('#produc_ids'+val).remove();--}}
-            {{--            })--}}
-            {{--        },--}}
-            {{--    });--}}
-            {{--});--}}
-
-
-
-{{--     </script>--}}
-
-{{--<script>--}}
-{{--    document.getElementById('bulk-delete-button').addEventListener('click', function(e) {--}}
-{{--        e.preventDefault();--}}
-
-{{--        // Confirm the bulk delete action--}}
-{{--        if (confirm('Are you sure you want to delete the selected products?')) {--}}
-{{--            document.getElementById('bulk-delete-form').submit();--}}
-{{--        }--}}
-{{--    });--}}
-{{--</script>--}}
-
-{{--<script>--}}
-{{--    $(document).ready(function() {--}}
-{{--        // Select/Deselect all checkboxes--}}
-{{--        $('#selectAll').click(function() {--}}
-{{--            var isChecked = $(this).is(':checked');--}}
-{{--            $('.productCheckbox').prop('checked', isChecked);--}}
-{{--        });--}}
-
-{{--        // Bulk delete button click event--}}
-{{--        $('#bulkDeleteBtn').click(function() {--}}
-{{--            var selectedIds = $('.productCheckbox:checked').map(function() {--}}
-{{--                return $(this).val();--}}
-{{--            }).get().join(',');--}}
-
-{{--            if (selectedIds.length === 0) {--}}
-{{--                alert('Please select at least one product to delete.');--}}
-{{--                return;--}}
-{{--            }--}}
-
-{{--            if (confirm('Are you sure you want to delete the selected products?')) {--}}
-{{--                $.ajax({--}}
-{{--                    url: '{{ route('products.bulk-delete') }}',--}}
-{{--                    type: 'DELETE',--}}
-{{--                    data: {--}}
-{{--                        _token: '{{ csrf_token() }}',--}}
-{{--                        product_ids: selectedIds--}}
-{{--                    },--}}
-{{--                    success: function(response) {--}}
-{{--                        if (response.success) {--}}
-{{--                            location.reload();--}}
-{{--                        } else {--}}
-{{--                            alert(response.error);--}}
-{{--                        }--}}
-{{--                    },--}}
-{{--                    error: function(response) {--}}
-{{--                        alert('An error occurred while deleting the products.');--}}
-{{--                    }--}}
-{{--                });--}}
-{{--            }--}}
-{{--        });--}}
-{{--    });--}}
-{{--</script>--}}
     <script>
 
         $(document).ready(function() {

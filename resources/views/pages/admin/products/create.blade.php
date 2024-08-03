@@ -52,162 +52,62 @@
         </form>
     </div>
 
-{{--    <script>--}}
-    {{--    $(document).ready(function() {--}}
-    {{--        // Add custom method for file size validation--}}
-    {{--        $.validator.addMethod('filesize', function(value, element, size) {--}}
-    {{--            return this.optional(element) || (element.files[0].size <= size * 1024 * 1024);--}}
-    {{--        }, 'File size must be less than {0} MB');--}}
-
-    {{--        // Initialize form validation--}}
-    {{--        $('#product-form').validate({--}}
-    {{--            rules: {--}}
-    {{--                name: {--}}
-    {{--                    required: true,--}}
-    {{--                    maxlength: 30--}}
-    {{--                },--}}
-    {{--                price: {--}}
-    {{--                    required: true,--}}
-    {{--                    number: true--}}
-    {{--                },--}}
-    {{--                status: {--}}
-    {{--                    required: true--}}
-    {{--                },--}}
-    {{--                'images[]': {--}}
-    {{--                    extension: "jpeg|png|jpg",--}}
-    {{--                    filesize: 2 // Size in MB--}}
-    {{--                }--}}
-    {{--            },--}}
-    {{--            messages: {--}}
-    {{--                name: {--}}
-    {{--                    required: "Please enter the product name",--}}
-    {{--                    minlength: "Product name must be at least 3 characters long"--}}
-    {{--                },--}}
-    {{--                price: {--}}
-    {{--                    required: "Please enter the price",--}}
-    {{--                    number: "Please enter a valid number"--}}
-    {{--                },--}}
-    {{--                status: {--}}
-    {{--                    required: "Please select a status"--}}
-    {{--                },--}}
-    {{--                'images[]': {--}}
-    {{--                    extension: "Only jpeg, png, and jpg formats are allowed",--}}
-    {{--                    filesize: "Image size should not exceed 2MB"--}}
-    {{--                }--}}
-    {{--            },--}}
-    {{--            submitHandler: function(form) {--}}
-    {{--                $(form).ajaxSubmit({--}}
-    {{--                    type: 'POST',--}}
-    {{--                    dataType: 'json',--}}
-    {{--                    success: function(response) {--}}
-    {{--                        window.location.href = response.redirect_url;--}}
-    {{--                    },--}}
-    {{--                    error: function(response) {--}}
-    {{--                        var errors = response.responseJSON.errors;--}}
-    {{--                        $.each(errors, function(key, value) {--}}
-    {{--                            $('#' + key + '-error').text(value[0]);--}}
-    {{--                        });--}}
-    {{--                    }--}}
-    {{--                });--}}
-    {{--            }--}}
-    {{--        });--}}
-    {{--    });--}}
-    {{--</script>--}}
 @endsection
-<!-- jQuery library -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- jQuery validation plugin -->
-<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.5/jquery.validate.min.js"></script>
-<!-- jQuery unobtrusive validation plugin (optional) -->
-<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate.unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script>
 <script>
     $(document).ready(function() {
-        function setupValidation(formId, ajaxUrl) {
-            $.validator.addMethod('filesize', function(value, element, param) {
-                var files = element.files;
-                for (var i = 0; i < files.length; i++) {
-                    if (files[i].size > param * 1024) {
-                        return false;
-                    }
+        // Initialize form validation
+        $('#product-form').validate({
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 3
+                },
+                price: {
+                    required: true,
+                    number: true
+                },
+                status: {
+                    required: true
+                },
+                'images[]': {
+                    extension: "jpeg|png|jpg",
+                    filesize: 2 // Size in MB
                 }
-                return true;
-            }, 'Each image must be less than 2MB.');
-
-            $(formId).validate({
-                rules: {
-                    name: {
-                        required: true,
-                        maxlength: 30
-                    },
-                    description: {
-                        required: true
-                    },
-                    price: {
-                        required: true,
-                        number: true
-                    },
-                    status: {
-                        required: true
-                    },
-                    'images[]': {
-                        extension: "jpeg|png|jpg",
-                        filesize: 2048 // 2MB in kilobytes
-                    }
+            },
+            messages: {
+                name: {
+                    required: "Please enter the product name",
+                    minlength: "Product name must be at least 3 characters long"
                 },
-                messages: {
-                    name: {
-                        required: "Please enter the product name.",
-                        maxlength: "Product name cannot exceed 30 characters."
-                    },
-                    description: {
-                        required: "Please enter a description."
-                    },
-                    price: {
-                        required: "Please enter the product price.",
-                        number: "Please enter a valid number."
-                    },
-                    status: {
-                        required: "Please select the product status."
-                    },
-                    'images[]': {
-                        extension: "Only jpeg, png, and jpg files are allowed.",
-                        filesize: "Each image must be less than 2MB."
-                    }
+                price: {
+                    required: "Please enter the price",
+                    number: "Please enter a valid number"
                 },
-                errorPlacement: function(error, element) {
-                    var id = element.attr('id') + '-error';
-                    $('#' + id).text(error.text());
+                status: {
+                    required: "Please select a status"
                 },
-                highlight: function(element) {
-                    $(element).addClass('is-invalid');
-                },
-                unhighlight: function(element) {
-                    $(element).removeClass('is-invalid');
-                },
-                submitHandler: function(form) {
-                    var formData = new FormData(form);
-
-                    $.ajax({
-                        url: ajaxUrl,
-                        type: 'POST',
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-                        success: function(response) {
-                            alert('Product saved successfully!');
-                            // Optionally redirect or update the product list
-                        },
-                        error: function(xhr) {
-                            alert('An error occurred while saving the product.');
-                            // Handle error response
-                        }
-                    });
+                'images[]': {
+                    extension: "Only jpeg, png, and jpg formats are allowed",
+                    filesize: "Image size should not exceed 2MB"
                 }
-            });
-        }
-
-        setupValidation('#product-create-form', '{{ route('products.store') }}');
-        {{--setupValidation('#product-edit-form', '{{ route('products.update', ['product' => '']) }}/' + $('#product-id-edit').val());--}}
+            },
+            submitHandler: function(form) {
+                $(form).ajaxSubmit({
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function(response) {
+                        window.location.href = response.redirect_url;
+                    },
+                    error: function(response) {
+                        var errors = response.responseJSON.errors;
+                        $.each(errors, function(key, value) {
+                            $('#' + key + '-error').text(value[0]);
+                        });
+                    }
+                });
+            }
+        });
     });
 </script>
